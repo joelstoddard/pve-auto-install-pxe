@@ -16,11 +16,22 @@
 
 ## Preparation
 
-* install `cpio file zstd gzip genisoimage` packages
-* download **Proxmox VE ISO Installer** from [Proxmox](http://proxmox.com/downloads) into a folder somewhere (e.g. `~/Downloads/proxmox-ve_6.4-1.iso`)
-* run the script `pve-iso-2-pxe.sh` with the path to the ISO file as parameter
-  * `bash pve-iso-2-pxe.sh ~/Downloads/proxmox-ve_6.4-1.iso`
-* the `linux26` and `initrd` (including ISO) will copied to the sub-directory `pxeboot` located relative to the iso file (e.g. `~/Downloads/pxeboot`)
+* Install Docker
+* download **Proxmox VE ISO Installer** from [Proxmox](http://proxmox.com/downloads)
+* Insert your `answers.toml`.
+* Build the container
+```bash
+docker build --platform linux/amd64 -t pve-auto-install-pxe . --no-cache
+```
+* Run the container
+```bash
+docker run -it --platform linux/amd64 \
+-v /path/to/answers.toml:/tmp/input/answers.toml \
+-v /path/to/proxmox.iso:/tmp/input/proxmox.iso \
+-v ./output:/tmp/output \
+pve-auto-install-pxe
+```
+* the `linux26` and `initrd` (including ISO) will be copied to the sub-directory `pxeboot` located relative to the iso file
 
 ## [iPXE](https://ipxe.org/) (recommended)
 
